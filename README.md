@@ -42,9 +42,19 @@ Then open: <http://localhost:5173/>
 
 ## Deploy (GitHub Pages)
 
-1) Commit and push to main
-2) Enable GitHub Pages for this repo using the root (main) branch
-3) Visit the published URL
+This repo includes a GitHub Actions workflow that deploys the site to GitHub Pages on each push to main.
+
+Steps:
+
+1) Commit and push your changes to the `main` branch.
+
+2) In your repository settings, under “Pages”, set Source to “GitHub Actions”.
+
+3) After the workflow completes, your site will be available at:
+	- User/Org site: <https://YOUR-USER.github.io/>
+	- Project site: <https://YOUR-USER.github.io/Browser_Ray_Trace/>
+
+You can also trigger a manual deploy from the Actions tab using “Deploy to GitHub Pages”.
 
 ## Notes
 
