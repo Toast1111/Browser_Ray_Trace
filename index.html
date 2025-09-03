@@ -23,6 +23,24 @@
         </label>
       </div>
       <div class="row">
+        <label>Render Mode
+          <select id="mode-select">
+            <option value="rm">Real-time (SDF Ray March)</option>
+            <option value="pt">Path Trace (Progressive)</option>
+          </select>
+        </label>
+      </div>
+      <div id="pt-controls" class="row" style="display:none;">
+        <label>SPP/frame
+          <input id="spp" type="range" min="1" max="64" step="1" value="4" />
+          <span id="spp-val">4</span>
+        </label>
+        <label>Bounces
+          <input id="bounces" type="range" min="1" max="8" step="1" value="3" />
+          <span id="bounces-val">3</span>
+        </label>
+      </div>
+      <div class="row">
         <label>Resolution Scale
           <input id="scale" type="range" min="0.4" max="1.25" step="0.05" value="0.8" />
           <span id="scale-val">0.80x</span>
@@ -34,6 +52,7 @@
       </div>
       <div class="row small">
         <span id="fps">FPS: --</span>
+  <span id="spp-accum" style="display:none;">Samples: 0</span>
         <span id="res">Res: --</span>
         <span id="gl">GL: --</span>
       </div>
