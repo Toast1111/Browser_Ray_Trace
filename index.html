@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Browser Ray Tracer (WebGL Ray Marching)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="ui">
+      <div class="row">
+        <strong>Browser Ray Tracer</strong>
+        <span id="status" class="badge">INIT</span>
+      </div>
+      <div class="row">
+        <label>Scene
+          <select id="scene-select">
+            <option value="0">Spheres & Floor</option>
+            <option value="1">Room & Mirror</option>
+            <option value="2">Orbiting Spheres</option>
+          </select>
+        </label>
+      </div>
+      <div class="row">
+        <label>Resolution Scale
+          <input id="scale" type="range" min="0.4" max="1.25" step="0.05" value="0.8" />
+          <span id="scale-val">0.80x</span>
+        </label>
+      </div>
+      <div class="row">
+        <button id="pause-btn">Pause</button>
+        <button id="reset-btn">Reset Camera</button>
+      </div>
+      <div class="row small">
+        <span id="fps">FPS: --</span>
+        <span id="res">Res: --</span>
+        <span id="gl">GL: --</span>
+      </div>
+      <div class="row small hint">Drag to orbit • Wheel/pinch to zoom • Two-finger drag to pan</div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+  </html>

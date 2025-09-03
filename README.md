@@ -1,2 +1,59 @@
-# Browser_Ray_Trace
-want to test your machine for performance, wether it’s a Mac, IPad, or Desktop you can see if your device can ray trace 
+# Browser Ray Tracer (WebGL Ray Marching)
+
+A tiny, portable ray tracer that runs entirely in the browser using WebGL fragment shaders (no server, no plugins). It works on desktops, tablets, phones—even a smart fridge if it has a modern browser.
+
+## Features
+
+- Signed Distance Field (SDF) ray marching in a fragment shader
+- Simple scenes: spheres, plane, box room, orbiting objects
+- Lighting: diffuse, specular, soft shadows, cheap reflections
+- Mouse and touch controls (orbit, zoom/pinch)
+- Resolution scaling for performance on mobile/high-DPI
+- WebGL2 preferred with graceful WebGL1 fallback
+
+## Quick start
+
+1) Open index.html directly: Many browsers block file:// shader loading. Prefer a local server.
+
+2) Run a static server in this folder.
+
+Try one of the following options:
+
+- Python 3
+
+	```bash
+	python3 -m http.server 5173
+	```
+
+- Node (if available)
+
+	```bash
+	npx serve -l 5173
+	```
+
+Then open: <http://localhost:5173/>
+
+## Controls
+
+- Drag: orbit
+- Mouse wheel / pinch: zoom
+- Two-finger drag: pan (limited)
+- Scene, resolution, pause/reset: top-left UI
+
+## Deploy (GitHub Pages)
+
+1) Commit and push to main
+2) Enable GitHub Pages for this repo using the root (main) branch
+3) Visit the published URL
+
+## Notes
+
+- If performance is low, reduce the Resolution Scale in the UI.
+- WebGL must be enabled in the browser. WebGPU is not required.
+- This ray tracer uses ray marching and is not path-traced; it focuses on speed and portability.
+
+---
+
+## Browser_Ray_Trace
+
+want to test your machine for performance, whether it’s a Mac, iPad, or Desktop you can see if your device can ray trace
