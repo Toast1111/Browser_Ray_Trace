@@ -54,6 +54,8 @@ Steps:
 	- User/Org site: <https://YOUR-USER.github.io/>
 	- Project site: <https://YOUR-USER.github.io/Browser_Ray_Trace/>
 
+Tip: For this repository, the project site will be at <https://Toast1111.github.io/Browser_Ray_Trace/> after the first successful deploy.
+
 You can also trigger a manual deploy from the Actions tab using “Deploy to GitHub Pages”.
 
 ## Notes
