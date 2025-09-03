@@ -119,7 +119,7 @@ function camVectors() {
 
 // Inputs
 let dragging = false; let lastX=0, lastY=0; let twoFinger=false; let lastPinch=0;
-canvas.addEventListener('mousedown', (e)=>{ dragging=true; lastX=e.clientX; lastY=e.clientY; });
+canvas.addEventListener('mousedown', (e)=>{ dragging=true; lastX=e.clientX; lastY=e.clientY; resetAccum(); });
 window.addEventListener('mouseup', ()=> dragging=false);
 window.addEventListener('mousemove', (e)=>{
   if (!dragging) return;
@@ -127,9 +127,11 @@ window.addEventListener('mousemove', (e)=>{
   lastX=e.clientX; lastY=e.clientY;
   cam.yaw -= dx * 0.005;
   cam.pitch = clamp(cam.pitch - dy*0.005, -1.2, 1.2);
+  resetAccum();
 });
 canvas.addEventListener('wheel', (e)=>{
   cam.dist = clamp(cam.dist * (1 + Math.sign(e.deltaY)*0.1), 1.5, 30);
+  resetAccum();
 });
 
 canvas.addEventListener('touchstart', (e)=>{
@@ -237,10 +239,13 @@ function initPTTargets(w, h){
   // extensions for float
   let type = gl.UNSIGNED_BYTE, internal = gl.RGBA, format = gl.RGBA;
   if (isWebGL2){
-    internal = gl.RGBA16F; format = gl.RGBA; type = gl.HALF_FLOAT;
+    // Try half-float, fallback to 8-bit
+    const ext = gl.getExtension('EXT_color_buffer_float');
+    if (ext) { internal = gl.RGBA16F; format = gl.RGBA; type = gl.HALF_FLOAT; }
   } else {
-    const ext = gl.getExtension('OES_texture_half_float');
-    if (ext) type = ext.HALF_FLOAT_OES;
+    const hf = gl.getExtension('OES_texture_half_float');
+    const rt = gl.getExtension('WEBGL_color_buffer_float') || gl.getExtension('EXT_color_buffer_half_float');
+    if (hf && rt) type = hf.HALF_FLOAT_OES;
   }
   // Accumulation ping-pong
   pt.texA = pt.texA || createTex(w,h, internal, format, type);

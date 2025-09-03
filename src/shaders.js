@@ -210,12 +210,18 @@ export function getShaders(isWebGL2){
 // -------------------- Path Tracing Shaders --------------------
 // Fullscreen vertex as above reused
 
-// Hash-based RNG
-const rngCommon = `
+// Hash-based RNG (GL2)
+const rngCommonGL2 = `
 uint murmur3(uint h){
   h ^= h >> 16u; h *= 0x7feb352du; h ^= h >> 15u; h *= 0x846ca68bu; h ^= h >> 16u; return h;
 }
 float rnd(inout uint state){ state = murmur3(state); return float(state) / 4294967296.0; }
+`;
+
+// Float-based RNG (GL1 compatible)
+const rngCommonGL1 = `
+float hashf(float x){ return fract(sin(x)*43758.5453123); }
+float rnd1(inout float s){ s = s + 1.0; return hashf(s); }
 `;
 
 // Accumulate path tracing into a floating buffer
@@ -319,7 +325,7 @@ vec3 onb(vec3 n, vec2 xi){
 const ptFragGL2 = `#version 300 es
 precision highp float;
 out vec4 fragColor;
-${rngCommon}
+${rngCommonGL2}
 ${ptCommon}
 void main(){
   ivec2 pix = ivec2(gl_FragCoord.xy);
@@ -364,30 +370,30 @@ void main(){
 
 const ptFragGL1 = `
 precision highp float;
-${rngCommon}
+${rngCommonGL1}
 ${ptCommon}
 void main(){
   vec2 res = u_res;
   vec2 uv = (gl_FragCoord.xy - 0.5*res)/res.y;
-  uint seed = uint(mod(gl_FragCoord.x,4096.0))*1973u ^ uint(mod(gl_FragCoord.y,4096.0))*9277u ^ uint(u_frame)*26699u;
   float s = tan(0.5*u_fovY);
   vec3 ro = u_camPos;
   vec3 sum = vec3(0.0);
-  for (int i=0;i<u_spp;i++){
-    vec2 jitter = vec2(fract(sin(float(seed))*43758.5453), fract(sin(float(seed+1u))*24634.6345)) - 0.5;
-    seed += 3u;
+  float seed = gl_FragCoord.x*12.9898 + gl_FragCoord.y*78.233 + float(u_frame)*3.0;
+  for (int i=0;i<64;i++){
+    if (i>=u_spp) break;
+    vec2 jitter = vec2(rnd1(seed), rnd1(seed)) - 0.5;
     vec3 rd = normalize(u_camFwd + (uv.x + jitter.x/res.y)*s*u_camRight + (uv.y + jitter.y/res.y)*s*u_camUp);
     vec3 throughput = vec3(1.0);
     vec3 L = vec3(0.0);
     vec3 rro = ro; vec3 rrd = rd;
-    for (int b=0;b<u_bounces;b++){
+    for (int b=0;b<8;b++){
+      if (b>=u_bounces) break;
       vec2 h = marchPT(rro, rrd);
       if (h.x>119.9){ L += throughput * sky(rrd); break; }
       vec3 pos = rro + rrd*h.x;
       vec3 n = calcNormalPT(pos);
       vec3 alb = albedo(h.y);
-      vec2 xi = vec2(fract(sin(float(seed))*12.9898), fract(sin(float(seed+1u))*78.233));
-      seed += 2u;
+      vec2 xi = vec2(rnd1(seed), rnd1(seed));
       vec3 newDir = onb(n, xi);
       throughput *= alb;
       rro = pos + n*0.003;
